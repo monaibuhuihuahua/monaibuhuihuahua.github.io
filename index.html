@@ -3,145 +3,83 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My GitHub Blog</title>
-  <meta name="description" content="一个部署在 GitHub Pages 上的个人博客原型，包含生活感悟、算法题和生活摄影栏目。">
+  <title>monaibuhuihuahua | Personal Blog</title>
+  <meta name="description" content="monaibuhuihuahua 的个人博客主页，包含自我介绍、生活感悟、算法题和生活摄影。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div class="page-shell">
-    <header class="hero">
-      <nav class="topbar">
-        <div class="brand">
-          <span class="brand-mark">GH</span>
-          <div>
-            <p>Personal Blog</p>
-            <h1>把生活、代码和影像放在同一个主页里</h1>
-          </div>
-        </div>
-        <a class="top-link" href="#sections">进入栏目</a>
+    <header class="site-header">
+      <a class="site-title" href="/">monaibuhuihuahua</a>
+      <nav class="site-nav">
+        <a href="#about">关于我</a>
+        <a href="/thoughts/">生活感悟</a>
+        <a href="/algorithms/">算法题</a>
+        <a href="/photography/">生活摄影</a>
       </nav>
-
-      <section class="hero-copy">
-        <p class="eyebrow">GitHub Pages Feasibility Demo</p>
-        <h2>先验证能不能部署，再决定要不要升级成更完整的博客系统。</h2>
-        <p class="hero-text">
-          这个原型采用纯静态 HTML + CSS，适合直接放到 GitHub 仓库中发布。
-          栏目设计按“可持续扩展”思路组织，后续可以继续加入读书、旅行、技术随笔等新板块。
-        </p>
-        <div class="hero-actions">
-          <a class="button primary" href="#sections">查看栏目结构</a>
-          <a class="button secondary" href="#roadmap">看后续扩展</a>
-        </div>
-      </section>
     </header>
 
     <main>
-      <section class="intro-grid">
+      <section id="about" class="hero-card">
+        <div class="avatar-block">
+          <img src="assets/avatar-placeholder.svg" alt="头像占位图，后续可替换成个人头像">
+          <p>把你的头像文件替换到 <code>assets/avatar-placeholder.svg</code> 即可。</p>
+        </div>
+
+        <div class="hero-copy">
+          <p class="eyebrow">Personal Blog</p>
+          <h1>你好，这里是 monaibuhuihuahua 的个人主页。</h1>
+          <p class="hero-text">
+            这里会慢慢收集我的生活感悟、算法题记录和生活摄影。
+            我希望把日常观察、技术积累和影像片段放在同一个地方，留下一些能回看的东西。
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="/thoughts/">先看生活感悟</a>
+            <a class="button secondary" href="/photography/">浏览摄影记录</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="about-grid">
         <article>
-          <span>部署方式</span>
-          <h3>直接托管静态站点</h3>
-          <p>最简单、风险最低，适合先把内容跑起来。</p>
+          <p class="eyebrow">About Me</p>
+          <h2>这个博客会写什么</h2>
+          <p>内容会比较个人化，也会比较真实。生活感悟写思考，算法题写过程，摄影写场景和当时的心情。</p>
         </article>
         <article>
-          <span>内容组织</span>
-          <h3>按栏目逐步扩展</h3>
-          <p>每个板块都能独立增长，不会把首页结构拖乱。</p>
-        </article>
-        <article>
-          <span>后续升级</span>
-          <h3>需要时再接入框架</h3>
-          <p>如果文章和图片越来越多，再迁移到 Astro、Next.js 或 Hugo 也很顺。</p>
+          <p class="eyebrow">How It Grows</p>
+          <h2>目录是分开的</h2>
+          <p>每个板块都放在独立文件夹里，后续新增内容和页面时不会互相打架，也方便你自己整理。</p>
         </article>
       </section>
 
-      <section id="sections" class="sections">
+      <section class="section-block">
         <div class="section-heading">
-          <p class="eyebrow">Blog Sections</p>
-          <h2>你现在想要的三个核心板块</h2>
+          <p class="eyebrow">Sections</p>
+          <h2>当前的三个主要板块</h2>
         </div>
 
         <div class="card-grid">
-          <article class="feature-card">
+          <a class="feature-card" href="/thoughts/">
             <p class="card-tag">01 / 生活感悟</p>
-            <h3>记录日常观察和成长思考</h3>
-            <p>适合写短文、阶段总结、生活片段，也最能建立个人博客的“人味”。</p>
-            <ul>
-              <li>月度总结</li>
-              <li>碎片思考</li>
-              <li>读书或观影感受</li>
-            </ul>
-          </article>
+            <h3>记录生活里的细节、阶段变化和一些慢慢成形的想法。</h3>
+            <p>适合写日常片段、阶段总结、读书观影后的余味。</p>
+          </a>
 
-          <article class="feature-card">
+          <a class="feature-card" href="/algorithms/">
             <p class="card-tag">02 / 算法题</p>
-            <h3>沉淀刷题过程和解题方法</h3>
-            <p>可以按题型、难度或平台分类，长期看会变成很有价值的个人知识库。</p>
-            <ul>
-              <li>数组与双指针</li>
-              <li>二叉树与图</li>
-              <li>动态规划总结</li>
-            </ul>
-          </article>
+            <h3>保留做题过程，不只放答案，也留下自己的理解。</h3>
+            <p>可以按题型、专题或者平台慢慢归档。</p>
+          </a>
 
-          <article class="feature-card">
+          <a class="feature-card" href="/photography/">
             <p class="card-tag">03 / 生活摄影</p>
-            <h3>把照片和拍摄故事一起展示</h3>
-            <p>GitHub Pages 也能很好承载摄影页面，只要做好图片压缩和相册分组。</p>
-            <ul>
-              <li>街头记录</li>
-              <li>旅行影像</li>
-              <li>器材与参数随记</li>
-            </ul>
-          </article>
-        </div>
-      </section>
-
-      <section class="sample-posts">
-        <div class="section-heading">
-          <p class="eyebrow">Sample Layout</p>
-          <h2>首页可以这样展示最近内容</h2>
-        </div>
-
-        <div class="post-list">
-          <article class="post-item">
-            <span class="post-type">生活感悟</span>
-            <h3>最近开始意识到，稳定输出比偶尔爆发更重要</h3>
-            <p>适合放一两句摘要，点击后进入单篇文章页。</p>
-          </article>
-
-          <article class="post-item">
-            <span class="post-type">算法题</span>
-            <h3>用单调栈解决“下一个更大元素”这一类问题</h3>
-            <p>题解页面里可以放思路、代码、复杂度和复盘。</p>
-          </article>
-
-          <article class="post-item">
-            <span class="post-type">生活摄影</span>
-            <h3>雨后傍晚的街道：一组有蓝灰色调的城市照片</h3>
-            <p>摄影页面里适合加入拍摄时间、地点和简短文字说明。</p>
-          </article>
-        </div>
-      </section>
-
-      <section id="roadmap" class="roadmap">
-        <div class="section-heading">
-          <p class="eyebrow">Scalability</p>
-          <h2>以后新增板块也不会推倒重来</h2>
-        </div>
-
-        <div class="roadmap-grid">
-          <article>
-            <h3>新增栏目</h3>
-            <p>只要复制一张栏目卡片，并增加对应页面或文章目录，就能扩展成读书、旅行、项目复盘等主题。</p>
-          </article>
-          <article>
-            <h3>升级内容系统</h3>
-            <p>当文章数量变多时，可以把当前静态结构迁移到支持 Markdown 的生成器，保留现有视觉设计。</p>
-          </article>
-          <article>
-            <h3>摄影优化</h3>
-            <p>可以加入图片懒加载、分辨率适配、Lightbox 相册浏览，提升阅读体验。</p>
-          </article>
+            <h3>放照片，也放拍照那一刻真正想留下的东西。</h3>
+            <p>后面可以继续扩展成相册、旅行集或街头记录。</p>
+          </a>
         </div>
       </section>
     </main>

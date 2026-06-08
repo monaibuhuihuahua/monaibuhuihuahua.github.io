@@ -1,30 +1,35 @@
-# 个人博客 — 干净极简风格
+# monaibuhuihuahua 的个人博客
 
-一个可直接部署到 GitHub Pages 的静态博客原型。
+这是一个部署在 GitHub Pages 上的个人博客，当前采用纯静态结构，方便直接维护。
 
-## 风格方向
+## 当前目录
 
-干净极简，类似 Medium / Notion 的阅读体验：
-- 白底、大量留白
-- 黑白色为主，蓝色作为点缀
-- 系统字体栈，强调可读性
-- 无装饰性元素，突出内容本身
+- `index.html`
+  个人主页，包含自我介绍、头像位置和三个栏目入口
+- `thoughts/`
+  生活感悟板块
+- `algorithms/`
+  算法题板块
+- `photography/`
+  生活摄影板块
+- `assets/`
+  公共资源目录，头像和后续图片都可以放这里
 
-## 当前栏目
+## 头像替换
 
-- 生活感悟
-- 算法题
-- 生活摄影
+当前主页头像使用的是占位图：
 
-## 部署方式
+- `assets/avatar-placeholder.svg`
 
-1. 新建 GitHub 仓库 `username.github.io`
-2. 把 `index.html` 和 `styles.css` 上传到仓库根目录
-3. 在仓库 `Settings -> Pages` 中，Source 选择 `Deploy from a branch`，分支选 `main`，目录选 `/ (root)`
-4. 保存后等待一两分钟，访问 `https://username.github.io`
+后续你可以直接把它替换成自己的头像文件。
+如果你想用别的文件名，比如 `avatar.jpg`，只需要同步修改 `index.html` 里的图片路径即可。
 
-## 后续扩展
+## 更新方式
 
-- 第一阶段：用静态页面上线，跑通部署流程
-- 第二阶段：按栏目补充真实文章和摄影内容
-- 第三阶段：内容增多后迁移到 Astro、Hugo 等静态生成器
+每次改完内容后，在项目目录执行：
+
+```bash
+git add .
+git commit -m "更新博客内容"
+git push
+```

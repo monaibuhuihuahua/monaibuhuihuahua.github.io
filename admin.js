@@ -179,11 +179,6 @@ ${links}
     </section>
 
     <section class="section-block">
-      <div class="section-heading">
-        <p class="eyebrow">Archive</p>
-        <h2>按年份整理</h2>
-      </div>
-
       <div class="about-grid">
 ${yearSections}
       </div>

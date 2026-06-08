@@ -283,7 +283,7 @@ const thoughtsTemplateJs = `(function () {
       if (!Array.isArray(data) || data.length === 0) {
         const empty = document.createElement("article");
         empty.className = "post-preview";
-        empty.innerHTML = "<p>这里还没有新的生活感悟。</p>";
+        empty.innerHTML = "<p>还没有记录。</p>";
         list.appendChild(empty);
         return;
       }
@@ -291,7 +291,7 @@ const thoughtsTemplateJs = `(function () {
     } catch {
       const fallback = document.createElement("article");
       fallback.className = "post-preview";
-      fallback.innerHTML = "<p>暂时没有成功读取生活感悟。</p>";
+      fallback.innerHTML = "<p>读取失败。</p>";
       list.appendChild(fallback);
     }
   }
@@ -525,7 +525,7 @@ async function renderThoughtRecords() {
   thoughtRecords.innerHTML = "";
 
   if (!records.length) {
-    thoughtRecords.innerHTML = `<article class="admin-record-item"><p>还没有生活感悟记录。</p></article>`;
+    thoughtRecords.innerHTML = `<article class="admin-record-item"><p>还没有记录。</p></article>`;
     return;
   }
 

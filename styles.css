@@ -30,6 +30,9 @@ body {
     radial-gradient(circle at top left, rgba(166, 91, 52, 0.18), transparent 24%),
     radial-gradient(circle at 85% 10%, rgba(115, 138, 112, 0.14), transparent 22%),
     linear-gradient(180deg, #efe5d6 0%, #f6f1e8 28%, #f8f4ec 100%);
+  background-repeat: no-repeat;
+  background-size: 100% 100%, 100% 100%, 100% 100%;
+  background-attachment: fixed;
   line-height: 1.7;
 }
 

@@ -288,6 +288,16 @@ a {
   border: 1px solid var(--line);
 }
 
+.photo-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.photo-grid img:only-child {
+  grid-column: 1 / -1;
+}
+
 .photo-copy {
   margin-top: 18px;
 }
@@ -313,6 +323,48 @@ a {
   margin-top: 18px;
   color: var(--muted);
   font-size: 0.92rem;
+}
+
+.admin-panel {
+  margin-top: 24px;
+}
+
+.admin-form {
+  display: grid;
+  gap: 18px;
+  margin-top: 24px;
+}
+
+.admin-form label {
+  display: grid;
+  gap: 8px;
+}
+
+.admin-form span {
+  font-weight: 700;
+}
+
+.admin-form input,
+.admin-form select,
+.admin-form textarea {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 14px 16px;
+  background: rgba(255, 253, 249, 0.9);
+  color: var(--text);
+  font: inherit;
+}
+
+.admin-form textarea {
+  resize: vertical;
+}
+
+.admin-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: center;
 }
 
 .back-link {
@@ -350,5 +402,9 @@ a {
 
   .hero-copy h1 {
     font-size: 2.5rem;
+  }
+
+  .photo-grid {
+    grid-template-columns: 1fr;
   }
 }

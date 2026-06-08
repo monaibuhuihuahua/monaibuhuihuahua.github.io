@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Photography Admin | monaibuhuihuahua</title>
+  <meta name="description" content="本地摄影内容管理页，用于把照片和感悟写入博客目录。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="page-shell content-page">
+    <a class="back-link" href="./">返回主页</a>
+
+    <section class="content-card">
+      <p class="eyebrow">Local Admin</p>
+      <h1>摄影内容管理台</h1>
+      <p>这个页面是本地专用工具。你可以选择博客根目录、选择月份、上传多张照片、写标题和感悟，然后自动写入对应月份的 JSON，并把照片复制到正确目录。</p>
+      <ul>
+        <li>第一次使用时先授权博客根目录</li>
+        <li>推荐在 Chrome 或 Edge 中使用</li>
+        <li>这个页面主要依赖浏览器的本地文件系统能力，不是 GitHub Pages 在线后台</li>
+      </ul>
+    </section>
+
+    <section class="content-card admin-panel">
+      <div class="admin-actions">
+        <button id="pick-root" class="button primary" type="button">选择博客根目录</button>
+        <p id="root-status" class="photo-tip">还没有选择目录。请选择 `C:\Users\a2556\Desktop\blog`。</p>
+      </div>
+
+      <form id="entry-form" class="admin-form">
+        <label>
+          <span>年份</span>
+          <input id="year" type="number" min="2020" max="2100" value="2026" required>
+        </label>
+
+        <label>
+          <span>月份</span>
+          <input id="month" type="number" min="1" max="12" value="6" required>
+        </label>
+
+        <label>
+          <span>日期</span>
+          <input id="date" type="text" placeholder="例如 2026.06.08" required>
+        </label>
+
+        <label>
+          <span>标题</span>
+          <input id="title" type="text" placeholder="这一组照片想起个什么标题" required>
+        </label>
+
+        <label>
+          <span>正文</span>
+          <textarea id="text" rows="5" placeholder="写下当时的心情、看到的场景，或者那天发生的小事" required></textarea>
+        </label>
+
+        <label>
+          <span>选择照片</span>
+          <input id="images" type="file" accept="image/*" multiple required>
+        </label>
+
+        <div class="admin-actions">
+          <button id="save-entry" class="button primary" type="submit">保存到本地博客</button>
+          <p id="save-status" class="photo-tip">准备好后点击保存。</p>
+        </div>
+      </form>
+    </section>
+  </div>
+
+  <script src="./admin.js"></script>
+</body>
+</html>

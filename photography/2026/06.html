@@ -17,44 +17,15 @@
     <section class="content-card">
       <p class="eyebrow">June 2026</p>
       <h1>2026 年 6 月</h1>
-      <p>这里改成了更适合你的记录方式：先放图片，再写当时的心情、场景和想记住的话。以后每次新增内容，只需要复制一张图文卡片。</p>
+      <p>这个页面会自动读取同目录下的 <code>06.json</code>，把图片和心情渲染出来。以后你只需要维护图片文件和这个 JSON 数据文件。</p>
       <ul>
-        <li>图片建议放在 `assets/photography/2026/06/`</li>
-        <li>每一条记录都可以是一张照片加一段心情</li>
-        <li>如果某次拍了很多图，也可以连续放多张图文卡片</li>
+        <li>图片统一放在 `assets/photography/2026/06/`</li>
+        <li>每条记录可以放 1 张或多张照片</li>
+        <li>每条记录下面都可以写一段统一的心情或说明</li>
       </ul>
     </section>
 
-    <section class="photo-journal">
-      <article class="photo-entry">
-        <img src="../../assets/photography/2026/06/cover-placeholder.svg" alt="2026 年 6 月摄影记录占位图">
-        <div class="photo-copy">
-          <p class="meta-line">2026.06 / 示例记录</p>
-          <h3>雨后的傍晚，城市像被重新擦亮了一次</h3>
-          <p>
-            路灯刚刚亮起来的时候，我突然很想把这一刻留住。地面还有水，空气里有一点潮，
-            但整条街意外地安静。拍下来的时候没有想太多，回看照片时才意识到，
-            我想记住的其实不是街道本身，而是那种慢下来以后才看见的柔和感。
-          </p>
-          <p class="photo-note">
-            这里就是你以后写“自己的心情”的位置。可以很短，只要是真实的就很好看。
-          </p>
-        </div>
-      </article>
-
-      <article class="photo-entry">
-        <img src="../../assets/photography/2026/06/cover-placeholder.svg" alt="第二条摄影记录占位图">
-        <div class="photo-copy">
-          <p class="meta-line">2026.06 / 示例记录</p>
-          <h3>有些照片并不完美，但会把当时的情绪留下来</h3>
-          <p>
-            这一类记录不一定需要很正式。你可以写拍摄地点、天气、那天发生了什么，
-            也可以只写一句当时脑子里闪过去的话。摄影板块最动人的部分，
-            往往就是这些很私人的感受。
-          </p>
-        </div>
-      </article>
-    </section>
+    <section id="photo-journal" class="photo-journal"></section>
 
     <section class="content-card">
       <p class="eyebrow">How To Add</p>
@@ -62,12 +33,14 @@
       <p>你后面新增摄影记录时，建议按下面这个顺序：</p>
       <ul>
         <li>先把图片放进 `assets/photography/2026/06/`</li>
-        <li>复制上面一整个 `photo-entry` 区块</li>
-        <li>把图片路径改成你的真实文件名</li>
-        <li>把标题和下面那段心情换成你自己的内容</li>
+        <li>打开同目录下的 `06.json`</li>
+        <li>新增一条记录，填写日期、标题、文字和图片文件名</li>
+        <li>保存后重新打开页面，就会自动显示</li>
       </ul>
-      <p class="photo-tip">如果你愿意，之后你只要把图片文件名和文字给我，我可以继续帮你排成这种风格。</p>
+      <p class="photo-tip">如果你之后直接把图片文件名和文字发给我，我也可以继续帮你补进 JSON。</p>
     </section>
   </div>
+
+  <script src="../month-template.js" data-year="2026" data-month="06"></script>
 </body>
 </html>

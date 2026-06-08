@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>生活摄影 | monaibuhuihuahua</title>
-  <meta name="description" content="monaibuhuihuahua 的生活摄影栏目。">
+  <meta name="description" content="monaibuhuihuahua 的生活摄影栏目，按年份和月份整理。">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
@@ -13,23 +13,31 @@
 <body>
   <div class="page-shell content-page">
     <a class="back-link" href="../">返回主页</a>
+
     <section class="content-card">
       <p class="eyebrow">Photography</p>
       <h1>生活摄影</h1>
-      <p>这里可以放照片、拍摄时间、地点，以及那一刻你真正想记住的故事。</p>
+      <p>这个板块现在按“年份 / 月份”来整理，适合长期积累，也方便以后回头翻某一段时间的照片。</p>
       <ul>
-        <li>适合按街头、旅行、日常和人物等主题建立相册</li>
-        <li>建议把压缩后的图片统一放在 `assets/photography/` 下</li>
-        <li>后续也可以继续加照片详情页或相册封面页</li>
+        <li>一个年份对应一个文件夹，比如 `photography/2026/`</li>
+        <li>一个月份对应一个页面，比如 `photography/2026/06.html`</li>
+        <li>照片文件建议统一放到 `assets/photography/年份/月/` 下面</li>
       </ul>
     </section>
 
-    <section class="post-list">
-      <article class="post-preview">
-        <p class="meta-line">示例相册</p>
-        <h3>雨后傍晚的街道，颜色比白天更安静</h3>
-        <p>等你准备好照片后，我可以继续帮你把这里改成真正的图文展示页。</p>
-      </article>
+    <section class="section-block">
+      <div class="section-heading">
+        <p class="eyebrow">Archive</p>
+        <h2>按时间归档</h2>
+      </div>
+
+      <div class="post-list">
+        <article class="post-preview">
+          <p class="meta-line">2026</p>
+          <h3><a href="./2026/06.html">2026 年 6 月</a></h3>
+          <p>适合收录这个月拍到的街道、天空、日常片段和旅行影像。</p>
+        </article>
+      </div>
     </section>
   </div>
 </body>

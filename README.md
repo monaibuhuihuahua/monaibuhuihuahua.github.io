@@ -11,18 +11,45 @@
 - `algorithms/`
   算法题板块
 - `photography/`
-  生活摄影板块
+  生活摄影板块，按年份和月份整理
 - `assets/`
-  公共资源目录，头像和后续图片都可以放这里
+  公共资源目录，头像和照片都可以放这里
 
-## 头像替换
+## 头像说明
 
-当前主页头像使用的是占位图：
+当前主页头像使用的是：
 
-- `assets/avatar-placeholder.svg`
+- `assets/avatar.png`
 
-后续你可以直接把它替换成自己的头像文件。
-如果你想用别的文件名，比如 `avatar.jpg`，只需要同步修改 `index.html` 里的图片路径即可。
+如果头像文件已经换了但页面没显示，通常检查这几件事：
+
+1. 文件名是不是完全一致，包括大小写
+2. 图片是不是确实放在 `assets/` 目录下
+3. `index.html` 里的路径是不是写成了 `assets/avatar.png`
+4. 浏览器是不是还在缓存旧页面，试一下强制刷新
+
+## 摄影整理方式
+
+建议按这个结构继续放：
+
+```text
+photography/
+  index.html
+  2026/
+    06.html
+
+assets/
+  photography/
+    2026/
+      06/
+        your-photo-01.jpg
+        your-photo-02.jpg
+```
+
+这样以后新增月份会很清楚，比如：
+
+- `photography/2026/07.html`
+- `assets/photography/2026/07/`
 
 ## 更新方式
 

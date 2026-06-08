@@ -386,6 +386,32 @@ a {
   align-items: center;
 }
 
+.admin-tabs {
+  display: flex;
+  gap: 12px;
+  margin: 24px 0 8px;
+}
+
+.admin-tab {
+  min-height: 42px;
+  padding: 0 18px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: rgba(255, 253, 249, 0.8);
+  color: var(--text-secondary);
+  font: inherit;
+  cursor: pointer;
+}
+
+.admin-tab.is-active {
+  background: var(--text);
+  color: #fffaf3;
+}
+
+.is-hidden {
+  display: none;
+}
+
 .year-links {
   display: flex;
   flex-wrap: wrap;

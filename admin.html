@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Photography Admin | monaibuhuihuahua</title>
-  <meta name="description" content="本地摄影内容管理页，用于把照片和感悟写入博客目录。">
+  <title>Local Admin | monaibuhuihuahua</title>
+  <meta name="description" content="本地内容管理页，用于维护摄影和算法题内容。">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
@@ -16,8 +16,8 @@
 
     <section class="content-card">
       <p class="eyebrow">Local Admin</p>
-      <h1>摄影内容管理台</h1>
-      <p>选择目录、上传照片、写标题和文字，然后直接保存。</p>
+      <h1>内容管理台</h1>
+      <p>选择目录后，可以新增摄影记录或算法题记录。</p>
     </section>
 
     <section class="content-card admin-panel">
@@ -26,7 +26,12 @@
         <p id="root-status" class="photo-tip">还没有选择目录。</p>
       </div>
 
-      <form id="entry-form" class="admin-form">
+      <div class="admin-tabs">
+        <button class="admin-tab is-active" type="button" data-tab="photography">摄影</button>
+        <button class="admin-tab" type="button" data-tab="algorithms">算法题</button>
+      </div>
+
+      <form id="photo-form" class="admin-form">
         <label>
           <span>年份</span>
           <input id="year" type="number" min="2020" max="2100" value="2026" required>
@@ -58,8 +63,35 @@
         </label>
 
         <div class="admin-actions">
-          <button id="save-entry" class="button primary" type="submit">保存到本地博客</button>
-          <p id="save-status" class="photo-tip"></p>
+          <button class="button primary" type="submit">保存摄影记录</button>
+          <p id="photo-status" class="photo-tip"></p>
+        </div>
+      </form>
+
+      <form id="algorithm-form" class="admin-form is-hidden">
+        <label>
+          <span>题型</span>
+          <input id="algo-type" type="text" placeholder="例如 数组、链表、二叉树、动态规划" required>
+        </label>
+
+        <label>
+          <span>题目网址</span>
+          <input id="algo-url" type="url" placeholder="https://..." required>
+        </label>
+
+        <label>
+          <span>题解</span>
+          <textarea id="algo-solution" rows="6" placeholder="记录这道题的思路、关键点、做法。" required></textarea>
+        </label>
+
+        <label>
+          <span>感悟</span>
+          <textarea id="algo-reflection" rows="4" placeholder="写这道题带给你的卡点、反思或收获。" required></textarea>
+        </label>
+
+        <div class="admin-actions">
+          <button class="button primary" type="submit">保存算法记录</button>
+          <p id="algo-status" class="photo-tip"></p>
         </div>
       </form>
     </section>

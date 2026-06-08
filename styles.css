@@ -48,7 +48,8 @@ a {
 .about-grid article,
 .feature-card,
 .content-card,
-.post-preview {
+.post-preview,
+.photo-entry {
   background: var(--surface);
   border: 1px solid var(--line);
   box-shadow: var(--shadow);
@@ -196,7 +197,8 @@ a {
 .about-grid article,
 .feature-card,
 .content-card,
-.post-preview {
+.post-preview,
+.photo-entry {
   border-radius: var(--radius-md);
   padding: 24px;
 }
@@ -264,6 +266,53 @@ a {
 .post-preview h3 {
   margin: 10px 0 8px;
   font-size: 1.2rem;
+}
+
+.photo-journal {
+  display: grid;
+  gap: 22px;
+  margin-top: 24px;
+}
+
+.photo-entry {
+  background: var(--surface-strong);
+}
+
+.photo-entry img {
+  display: block;
+  width: 100%;
+  border-radius: 18px;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  background: linear-gradient(135deg, #ead8c7, #f7efe6);
+  border: 1px solid var(--line);
+}
+
+.photo-copy {
+  margin-top: 18px;
+}
+
+.photo-copy h3 {
+  margin: 10px 0 10px;
+  font-size: 1.28rem;
+  font-family: "Noto Serif SC", serif;
+}
+
+.photo-copy p {
+  margin: 0;
+  color: var(--text-secondary);
+}
+
+.photo-note {
+  margin-top: 12px;
+  padding-left: 14px;
+  border-left: 3px solid rgba(166, 91, 52, 0.32);
+}
+
+.photo-tip {
+  margin-top: 18px;
+  color: var(--muted);
+  font-size: 0.92rem;
 }
 
 .back-link {

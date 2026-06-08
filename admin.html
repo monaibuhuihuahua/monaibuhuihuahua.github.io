@@ -28,6 +28,7 @@
 
       <div class="admin-tabs">
         <button class="admin-tab is-active" type="button" data-tab="photography">摄影</button>
+        <button class="admin-tab" type="button" data-tab="thoughts">生活感悟</button>
         <button class="admin-tab" type="button" data-tab="algorithms">算法题</button>
       </div>
 
@@ -74,6 +75,36 @@
           <button id="load-photo-records" class="button secondary" type="button">读取当前月份</button>
         </div>
         <div id="photo-records" class="admin-record-list"></div>
+      </section>
+
+      <form id="thought-form" class="admin-form is-hidden">
+        <label>
+          <span>标题</span>
+          <input id="thought-title" type="text" placeholder="这一篇想写什么" required>
+        </label>
+
+        <label>
+          <span>时间</span>
+          <input id="thought-date" type="text" placeholder="例如 2026.06.08" required>
+        </label>
+
+        <label>
+          <span>内容</span>
+          <textarea id="thought-content" rows="7" placeholder="写下你的生活感悟。" required></textarea>
+        </label>
+
+        <div class="admin-actions">
+          <button class="button primary" type="submit">保存生活感悟</button>
+          <p id="thought-status" class="photo-tip"></p>
+        </div>
+      </form>
+
+      <section id="thought-records-section" class="admin-records is-hidden">
+        <div class="admin-actions">
+          <h2>生活感悟</h2>
+          <button id="load-thought-records" class="button secondary" type="button">读取全部记录</button>
+        </div>
+        <div id="thought-records" class="admin-record-list"></div>
       </section>
 
       <form id="algorithm-form" class="admin-form is-hidden">

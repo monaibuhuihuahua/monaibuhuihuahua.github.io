@@ -1,19 +1,25 @@
 let rootHandle = null;
 let editingPhotoIndex = null;
+let editingThoughtIndex = null;
 let editingAlgoIndex = null;
 const DEFAULT_ROOT_PATH = "C:\\Users\\a2556\\Desktop\\blog";
 
 const pickRootButton = document.getElementById("pick-root");
 const rootStatus = document.getElementById("root-status");
 const photoForm = document.getElementById("photo-form");
+const thoughtForm = document.getElementById("thought-form");
 const algorithmForm = document.getElementById("algorithm-form");
 const photoStatus = document.getElementById("photo-status");
+const thoughtStatus = document.getElementById("thought-status");
 const algoStatus = document.getElementById("algo-status");
 const tabButtons = document.querySelectorAll(".admin-tab");
 const photoRecords = document.getElementById("photo-records");
+const thoughtRecords = document.getElementById("thought-records");
 const algoRecords = document.getElementById("algo-records");
 const loadPhotoRecordsButton = document.getElementById("load-photo-records");
+const loadThoughtRecordsButton = document.getElementById("load-thought-records");
 const loadAlgoRecordsButton = document.getElementById("load-algo-records");
+const thoughtRecordsSection = document.getElementById("thought-records-section");
 const algorithmRecordsSection = document.getElementById("algorithm-records-section");
 
 function setStatus(element, text) {
@@ -254,6 +260,80 @@ ${cards}
   await writeText(indexHandle, html);
 }
 
+const thoughtsTemplateJs = `(function () {
+  const script = document.currentScript;
+  const fileName = script.dataset.file;
+  const list = document.getElementById("thought-list");
+
+  function render(entry) {
+    const article = document.createElement("article");
+    article.className = "post-preview";
+    article.innerHTML = \`
+      <p class="meta-line">\${entry.date}</p>
+      <h3>\${entry.title}</h3>
+      <p>\${entry.content}</p>
+    \`;
+    return article;
+  }
+
+  async function load() {
+    try {
+      const response = await fetch("./" + fileName);
+      const data = await response.json();
+      if (!Array.isArray(data) || data.length === 0) {
+        const empty = document.createElement("article");
+        empty.className = "post-preview";
+        empty.innerHTML = "<p>这里还没有新的生活感悟。</p>";
+        list.appendChild(empty);
+        return;
+      }
+      data.forEach((entry) => list.appendChild(render(entry)));
+    } catch {
+      const fallback = document.createElement("article");
+      fallback.className = "post-preview";
+      fallback.innerHTML = "<p>暂时没有成功读取生活感悟。</p>";
+      list.appendChild(fallback);
+    }
+  }
+
+  load();
+})();`;
+
+async function ensureThoughtTemplate(thoughtsDir) {
+  const jsHandle = await thoughtsDir.getFileHandle("thoughts-template.js", { create: true });
+  const current = await (await jsHandle.getFile()).text();
+  if (current.trim()) {
+    return;
+  }
+  await writeText(jsHandle, thoughtsTemplateJs);
+}
+
+async function rebuildThoughtsIndex(thoughtsDir) {
+  const html = `<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>生活感悟 | monaibuhuihuahua</title>
+  <meta name="description" content="monaibuhuihuahua 的生活感悟栏目。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+  <div class="page-shell content-page">
+    <a class="back-link" href="../">返回主页</a>
+    <section id="thought-list" class="post-list"></section>
+    <script src="./thoughts-template.js" data-file="thoughts.json"></script>
+  </div>
+</body>
+</html>`;
+
+  const indexHandle = await thoughtsDir.getFileHandle("index.html", { create: true });
+  await writeText(indexHandle, html);
+}
+
 const algorithmTemplateJs = `(function () {
   const script = document.currentScript;
   const fileName = script.dataset.file;
@@ -421,13 +501,52 @@ tabButtons.forEach((button) => {
     button.classList.add("is-active");
     const tab = button.dataset.tab;
     photoForm.classList.toggle("is-hidden", tab !== "photography");
+    thoughtForm.classList.toggle("is-hidden", tab !== "thoughts");
     algorithmForm.classList.toggle("is-hidden", tab !== "algorithms");
+    thoughtRecordsSection.classList.toggle("is-hidden", tab !== "thoughts");
     algorithmRecordsSection.classList.toggle("is-hidden", tab !== "algorithms");
   });
 });
 
 loadPhotoRecordsButton.addEventListener("click", () => {
   renderPhotoRecords().catch((error) => setStatus(photoStatus, error.message));
+});
+
+async function renderThoughtRecords() {
+  if (!rootHandle) {
+    setStatus(thoughtStatus, `请先授权默认目录：${DEFAULT_ROOT_PATH}`);
+    return;
+  }
+
+  const thoughtsDir = await getDirectory(rootHandle, "thoughts");
+  await ensureThoughtTemplate(thoughtsDir);
+  const jsonHandle = await thoughtsDir.getFileHandle("thoughts.json", { create: true });
+  const records = await getFileJson(jsonHandle);
+  thoughtRecords.innerHTML = "";
+
+  if (!records.length) {
+    thoughtRecords.innerHTML = `<article class="admin-record-item"><p>还没有生活感悟记录。</p></article>`;
+    return;
+  }
+
+  records.forEach((entry, index) => {
+    const article = document.createElement("article");
+    article.className = "admin-record-item";
+    article.innerHTML = `
+      <p class="meta-line">${escapeHtml(entry.date || "")}</p>
+      <h3>${escapeHtml(entry.title || "未命名")}</h3>
+      <p>${escapeHtml(entry.content || "")}</p>
+      <div class="admin-record-actions">
+        <button type="button" data-index="${index}" data-action="edit-thought">编辑</button>
+        <button type="button" data-index="${index}" data-action="delete-thought">删除</button>
+      </div>
+    `;
+    thoughtRecords.appendChild(article);
+  });
+}
+
+loadThoughtRecordsButton.addEventListener("click", () => {
+  renderThoughtRecords().catch((error) => setStatus(thoughtStatus, error.message));
 });
 
 loadAlgoRecordsButton.addEventListener("click", () => {
@@ -465,6 +584,42 @@ photoRecords.addEventListener("click", async (event) => {
     }
     await renderPhotoRecords();
     setStatus(photoStatus, `已删除 ${year}/${month} 的第 ${index + 1} 条记录。`);
+  }
+});
+
+thoughtRecords.addEventListener("click", async (event) => {
+  const target = event.target;
+  if (!(target instanceof HTMLButtonElement)) {
+    return;
+  }
+
+  const index = Number(target.dataset.index);
+  const action = target.dataset.action;
+  const thoughtsDir = await getDirectory(rootHandle, "thoughts");
+  await ensureThoughtTemplate(thoughtsDir);
+  const jsonHandle = await thoughtsDir.getFileHandle("thoughts.json", { create: true });
+  const records = await getFileJson(jsonHandle);
+
+  if (action === "edit-thought") {
+    const entry = records[index];
+    editingThoughtIndex = index;
+    document.getElementById("thought-title").value = entry.title || "";
+    document.getElementById("thought-date").value = entry.date || "";
+    document.getElementById("thought-content").value = entry.content || "";
+    setStatus(thoughtStatus, `正在编辑第 ${index + 1} 条生活感悟。`);
+    return;
+  }
+
+  if (action === "delete-thought") {
+    records.splice(index, 1);
+    await writeJson(jsonHandle, records);
+    await rebuildThoughtsIndex(thoughtsDir);
+    if (editingThoughtIndex === index) {
+      editingThoughtIndex = null;
+      thoughtForm.reset();
+    }
+    await renderThoughtRecords();
+    setStatus(thoughtStatus, `已删除第 ${index + 1} 条生活感悟。`);
   }
 });
 
@@ -566,6 +721,41 @@ photoForm.addEventListener("submit", async (event) => {
     setStatus(photoStatus, wasEditing ? `已更新 ${year}/${month} 的记录。` : `已保存到 ${year}/${month}。`);
   } catch (error) {
     setStatus(photoStatus, `保存失败：${error.message}`);
+  }
+});
+
+thoughtForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  if (!rootHandle) {
+    setStatus(thoughtStatus, `请先授权默认目录：${DEFAULT_ROOT_PATH}`);
+    return;
+  }
+
+  try {
+    const title = document.getElementById("thought-title").value.trim();
+    const date = document.getElementById("thought-date").value.trim();
+    const content = document.getElementById("thought-content").value.trim();
+    const thoughtsDir = await getDirectory(rootHandle, "thoughts");
+    await ensureThoughtTemplate(thoughtsDir);
+    const jsonHandle = await thoughtsDir.getFileHandle("thoughts.json", { create: true });
+    const records = await getFileJson(jsonHandle);
+    const entry = { title, date, content };
+
+    if (editingThoughtIndex !== null) {
+      records[editingThoughtIndex] = entry;
+    } else {
+      records.push(entry);
+    }
+
+    await writeJson(jsonHandle, records);
+    await rebuildThoughtsIndex(thoughtsDir);
+    thoughtForm.reset();
+    const wasEditing = editingThoughtIndex !== null;
+    editingThoughtIndex = null;
+    await renderThoughtRecords();
+    setStatus(thoughtStatus, wasEditing ? "已更新生活感悟。" : "已保存生活感悟。");
+  } catch (error) {
+    setStatus(thoughtStatus, `保存失败：${error.message}`);
   }
 });
 

@@ -61,6 +61,14 @@ function englishMonthName(month) {
   return names[Number(month) - 1] || "Month";
 }
 
+function escapeHtml(text) {
+  return String(text)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll("\"", "&quot;");
+}
+
 function buildMonthHtml(year, month) {
   const monthPadded = padMonth(month);
   return `<!DOCTYPE html>
@@ -102,6 +110,91 @@ async function ensureMonthPage(yearDir, year, month) {
 
   const writable = await htmlHandle.createWritable();
   await writable.write(buildMonthHtml(year, monthPadded));
+  await writable.close();
+}
+
+async function rebuildPhotographyIndex(photographyDir) {
+  const archives = [];
+
+  for await (const [yearName, yearHandle] of photographyDir.entries()) {
+    if (yearHandle.kind !== "directory" || !/^\d{4}$/.test(yearName)) {
+      continue;
+    }
+
+    const months = [];
+    for await (const [fileName, fileHandle] of yearHandle.entries()) {
+      if (fileHandle.kind !== "file" || !/^\d{2}\.html$/.test(fileName)) {
+        continue;
+      }
+
+      const month = fileName.replace(".html", "");
+      months.push(month);
+    }
+
+    months.sort((a, b) => Number(a) - Number(b));
+    archives.push({ year: yearName, months });
+  }
+
+  archives.sort((a, b) => Number(a.year) - Number(b.year));
+
+  const yearSections = archives.map(({ year, months }) => {
+    const links = months.map((month) => {
+      return `            <a href="./${year}/${month}.html">${Number(month)} 月</a>`;
+    }).join("\n");
+
+    return `        <article>
+          <p class="eyebrow">${escapeHtml(year)}</p>
+          <h2>${escapeHtml(year)}</h2>
+          <div class="year-links">
+${links}
+          </div>
+        </article>`;
+  }).join("\n\n");
+
+  const html = `<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>生活摄影 | monaibuhuihuahua</title>
+  <meta name="description" content="monaibuhuihuahua 的生活摄影栏目，按年份和月份整理。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+  <div class="page-shell content-page">
+    <a class="back-link" href="../">返回主页</a>
+
+    <section class="content-card">
+      <p class="eyebrow">Photography</p>
+      <h1>生活摄影</h1>
+      <p>这里先按年份归类，再进入具体月份。这样目录会更稳，也方便以后把每一年的拍摄记录单独整理出来。</p>
+      <ul>
+        <li>页面路径：\`photography/年份/月.html\`</li>
+        <li>数据路径：\`photography/年份/月.json\`</li>
+        <li>图片目录：\`assets/photography/年份/月/\`</li>
+      </ul>
+    </section>
+
+    <section class="section-block">
+      <div class="section-heading">
+        <p class="eyebrow">Archive</p>
+        <h2>按年份整理</h2>
+      </div>
+
+      <div class="about-grid">
+${yearSections}
+      </div>
+    </section>
+  </div>
+</body>
+</html>`;
+
+  const indexHandle = await photographyDir.getFileHandle("index.html", { create: true });
+  const writable = await indexHandle.createWritable();
+  await writable.write(html);
   await writable.close();
 }
 
@@ -173,11 +266,12 @@ form.addEventListener("submit", async (event) => {
     });
 
     await writeJson(jsonHandle, current);
+    await rebuildPhotographyIndex(photographyDir);
 
     form.reset();
     document.getElementById("year").value = year;
     document.getElementById("month").value = String(Number(month));
-    setStatus(saveStatus, `保存成功：已写入 ${year}/${month}.json，必要目录和页面已自动创建，并复制 ${images.length} 张照片。`);
+    setStatus(saveStatus, `保存成功：已写入 ${year}/${month}.json，必要目录、月份页面和摄影归档页都已自动更新，并复制 ${images.length} 张照片。`);
   } catch (error) {
     setStatus(saveStatus, `保存失败：${error.message}`);
   }

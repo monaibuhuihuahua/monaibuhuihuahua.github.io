@@ -26,14 +26,21 @@ body {
   margin: 0;
   font-family: "Manrope", sans-serif;
   color: var(--text);
-  background:
-    radial-gradient(circle at top left, rgba(166, 91, 52, 0.18), transparent 24%),
-    radial-gradient(circle at 85% 10%, rgba(115, 138, 112, 0.14), transparent 22%),
-    linear-gradient(180deg, #efe5d6 0%, #f6f1e8 28%, #f8f4ec 100%);
-  background-repeat: no-repeat;
-  background-size: 100% 100%, 100% 100%, 100% 100%;
-  background-attachment: fixed;
+  background: #f7f2ea;
   line-height: 1.7;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 12% 16%, rgba(205, 162, 111, 0.18), transparent 22%),
+    radial-gradient(circle at 84% 14%, rgba(159, 176, 141, 0.14), transparent 20%),
+    radial-gradient(circle at 70% 72%, rgba(222, 196, 158, 0.16), transparent 24%),
+    linear-gradient(180deg, #efe6d8 0%, #f7f2ea 38%, #fbf8f2 100%);
 }
 
 a {

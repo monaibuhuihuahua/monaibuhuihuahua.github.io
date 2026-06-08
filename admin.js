@@ -101,6 +101,14 @@ async function copyImage(targetDir, file) {
   return file.name;
 }
 
+async function deleteImageIfExists(targetDir, fileName) {
+  try {
+    await targetDir.removeEntry(fileName);
+  } catch {
+    // Ignore missing files so edits stay resilient.
+  }
+}
+
 function buildMonthHtml(year, month) {
   const monthPadded = padMonth(month);
   return `<!DOCTYPE html>
@@ -689,6 +697,15 @@ photoForm.addEventListener("submit", async (event) => {
       const photographyAssetsDir = await getDirectory(assetsDir, "photography");
       const yearAssetsDir = await getDirectory(photographyAssetsDir, year);
       const monthAssetsDir = await getDirectory(yearAssetsDir, month);
+
+      if (editingPhotoIndex !== null) {
+        const oldImages = records[editingPhotoIndex]?.images || [];
+        for (const image of oldImages) {
+          if (image?.file) {
+            await deleteImageIfExists(monthAssetsDir, image.file);
+          }
+        }
+      }
 
       images = [];
       for (const file of files) {

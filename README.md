@@ -108,3 +108,13 @@ git add .
 git commit -m "更新博客内容"
 git push
 ```
+
+如果你想少敲命令，也可以直接双击：
+
+- `publish.bat`
+
+它会自动执行：
+
+- `git add .`
+- `git commit -m "auto update: 时间"`
+- `git push`

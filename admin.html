@@ -22,8 +22,8 @@
 
     <section class="content-card admin-panel">
       <div class="admin-actions">
-        <button id="pick-root" class="button primary" type="button">选择博客根目录</button>
-        <p id="root-status" class="photo-tip">还没有选择目录。</p>
+        <button id="pick-root" class="button secondary" type="button">更换博客根目录</button>
+        <p id="root-status" class="photo-tip">默认目录：C:\Users\a2556\Desktop\blog</p>
       </div>
 
       <div class="admin-tabs">
@@ -68,6 +68,14 @@
         </div>
       </form>
 
+      <section class="admin-records">
+        <div class="admin-actions">
+          <h2>摄影记录</h2>
+          <button id="load-photo-records" class="button secondary" type="button">读取当前月份</button>
+        </div>
+        <div id="photo-records" class="admin-record-list"></div>
+      </section>
+
       <form id="algorithm-form" class="admin-form is-hidden">
         <label>
           <span>题型</span>
@@ -94,6 +102,14 @@
           <p id="algo-status" class="photo-tip"></p>
         </div>
       </form>
+
+      <section id="algorithm-records-section" class="admin-records is-hidden">
+        <div class="admin-actions">
+          <h2>算法记录</h2>
+          <button id="load-algo-records" class="button secondary" type="button">读取当前题型</button>
+        </div>
+        <div id="algo-records" class="admin-record-list"></div>
+      </section>
     </section>
   </div>
 

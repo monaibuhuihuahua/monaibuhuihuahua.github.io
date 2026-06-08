@@ -1,4 +1,7 @@
 let rootHandle = null;
+let editingPhotoIndex = null;
+let editingAlgoIndex = null;
+const DEFAULT_ROOT_PATH = "C:\\Users\\a2556\\Desktop\\blog";
 
 const pickRootButton = document.getElementById("pick-root");
 const rootStatus = document.getElementById("root-status");
@@ -7,6 +10,11 @@ const algorithmForm = document.getElementById("algorithm-form");
 const photoStatus = document.getElementById("photo-status");
 const algoStatus = document.getElementById("algo-status");
 const tabButtons = document.querySelectorAll(".admin-tab");
+const photoRecords = document.getElementById("photo-records");
+const algoRecords = document.getElementById("algo-records");
+const loadPhotoRecordsButton = document.getElementById("load-photo-records");
+const loadAlgoRecordsButton = document.getElementById("load-algo-records");
+const algorithmRecordsSection = document.getElementById("algorithm-records-section");
 
 function setStatus(element, text) {
   element.textContent = text;
@@ -300,6 +308,92 @@ async function rebuildAlgorithmTypePage(algorithmsDir, typeName, fileName) {
   await writeText(htmlHandle, buildAlgorithmTypeHtml(typeName, fileName));
 }
 
+async function getPhotoJsonHandle() {
+  const year = document.getElementById("year").value.trim();
+  const month = padMonth(document.getElementById("month").value.trim());
+  const photographyDir = await getDirectory(rootHandle, "photography");
+  const yearDir = await getDirectory(photographyDir, year);
+  await ensureMonthPage(yearDir, year, month);
+  const jsonHandle = await yearDir.getFileHandle(`${month}.json`, { create: true });
+  return { year, month, photographyDir, jsonHandle };
+}
+
+async function renderPhotoRecords() {
+  if (!rootHandle) {
+    setStatus(photoStatus, "请先选择博客根目录。");
+    return;
+  }
+
+  const { year, month, jsonHandle } = await getPhotoJsonHandle();
+  const records = await getFileJson(jsonHandle);
+  photoRecords.innerHTML = "";
+
+  if (!records.length) {
+    photoRecords.innerHTML = `<article class="admin-record-item"><p>${year} 年 ${Number(month)} 月还没有记录。</p></article>`;
+    return;
+  }
+
+  records.forEach((entry, index) => {
+    const article = document.createElement("article");
+    article.className = "admin-record-item";
+    article.innerHTML = `
+      <p class="meta-line">${escapeHtml(entry.date || "")}</p>
+      <h3>${escapeHtml(entry.title || "未命名记录")}</h3>
+      <p>${escapeHtml(entry.text || "")}</p>
+      <div class="admin-record-actions">
+        <button type="button" data-index="${index}" data-action="edit-photo">编辑</button>
+        <button type="button" data-index="${index}" data-action="delete-photo">删除</button>
+      </div>
+    `;
+    photoRecords.appendChild(article);
+  });
+}
+
+async function getAlgorithmJsonHandle() {
+  const type = document.getElementById("algo-type").value.trim();
+  if (!type) {
+    throw new Error("请先填写题型。");
+  }
+  const algorithmsDir = await getDirectory(rootHandle, "algorithms");
+  await ensureAlgorithmTemplate(algorithmsDir);
+  const fileBase = slugify(type);
+  const fileName = `${fileBase}.json`;
+  const jsonHandle = await algorithmsDir.getFileHandle(fileName, { create: true });
+  return { type, fileName, algorithmsDir, jsonHandle };
+}
+
+async function renderAlgorithmRecords() {
+  if (!rootHandle) {
+    setStatus(algoStatus, "请先选择博客根目录。");
+    return;
+  }
+
+  const { type, jsonHandle } = await getAlgorithmJsonHandle();
+  const records = await getFileJson(jsonHandle);
+  algoRecords.innerHTML = "";
+
+  if (!records.length) {
+    algoRecords.innerHTML = `<article class="admin-record-item"><p>${escapeHtml(type)} 还没有记录。</p></article>`;
+    return;
+  }
+
+  records.forEach((entry, index) => {
+    const article = document.createElement("article");
+    article.className = "admin-record-item";
+    article.innerHTML = `
+      <p class="meta-line">题目链接</p>
+      <h3>${escapeHtml(entry.url || "未填写链接")}</h3>
+      <p><strong>题解：</strong>${escapeHtml(entry.solution || "")}</p>
+      <p><strong>感悟：</strong>${escapeHtml(entry.reflection || "")}</p>
+      <div class="admin-record-actions">
+        <button type="button" data-index="${index}" data-action="edit-algo">编辑</button>
+        <button type="button" data-index="${index}" data-action="delete-algo">删除</button>
+      </div>
+    `;
+    algoRecords.appendChild(article);
+  });
+}
+
 pickRootButton.addEventListener("click", async () => {
   try {
     rootHandle = await window.showDirectoryPicker();
@@ -314,6 +408,13 @@ pickRootButton.addEventListener("click", async () => {
   }
 });
 
+async function ensureRootHandle() {
+  if (rootHandle) {
+    return rootHandle;
+  }
+  throw new Error(`当前未连接目录。默认使用 ${DEFAULT_ROOT_PATH}，请先点击“更换博客根目录”授权一次。`);
+}
+
 tabButtons.forEach((button) => {
   button.addEventListener("click", () => {
     tabButtons.forEach((tab) => tab.classList.remove("is-active"));
@@ -321,82 +422,76 @@ tabButtons.forEach((button) => {
     const tab = button.dataset.tab;
     photoForm.classList.toggle("is-hidden", tab !== "photography");
     algorithmForm.classList.toggle("is-hidden", tab !== "algorithms");
+    algorithmRecordsSection.classList.toggle("is-hidden", tab !== "algorithms");
   });
 });
 
-photoForm.addEventListener("submit", async (event) => {
-  event.preventDefault();
-  if (!rootHandle) {
-    setStatus(photoStatus, "请先选择博客根目录。");
+loadPhotoRecordsButton.addEventListener("click", () => {
+  renderPhotoRecords().catch((error) => setStatus(photoStatus, error.message));
+});
+
+loadAlgoRecordsButton.addEventListener("click", () => {
+  renderAlgorithmRecords().catch((error) => setStatus(algoStatus, error.message));
+});
+
+photoRecords.addEventListener("click", async (event) => {
+  const target = event.target;
+  if (!(target instanceof HTMLButtonElement)) {
     return;
   }
 
-  try {
-    const year = document.getElementById("year").value.trim();
-    const month = padMonth(document.getElementById("month").value.trim());
-    const date = document.getElementById("date").value.trim();
-    const title = document.getElementById("title").value.trim();
-    const text = document.getElementById("text").value.trim();
-    const files = Array.from(document.getElementById("images").files || []);
+  const index = Number(target.dataset.index);
+  const action = target.dataset.action;
+  const { year, month, photographyDir, jsonHandle } = await getPhotoJsonHandle();
+  const records = await getFileJson(jsonHandle);
 
-    if (!files.length) {
-      setStatus(photoStatus, "请至少选择一张照片。");
-      return;
-    }
+  if (action === "edit-photo") {
+    const entry = records[index];
+    editingPhotoIndex = index;
+    document.getElementById("date").value = entry.date || "";
+    document.getElementById("title").value = entry.title || "";
+    document.getElementById("text").value = entry.text || "";
+    setStatus(photoStatus, `正在编辑 ${year}/${month} 的第 ${index + 1} 条记录。重新保存即可覆盖。`);
+    return;
+  }
 
-    const assetsDir = await getDirectory(rootHandle, "assets");
-    const photographyAssetsDir = await getDirectory(assetsDir, "photography");
-    const yearAssetsDir = await getDirectory(photographyAssetsDir, year);
-    const monthAssetsDir = await getDirectory(yearAssetsDir, month);
-
-    const photographyDir = await getDirectory(rootHandle, "photography");
-    const yearDir = await getDirectory(photographyDir, year);
-    await ensureMonthPage(yearDir, year, month);
-    const jsonHandle = await yearDir.getFileHandle(`${month}.json`, { create: true });
-
-    const images = [];
-    for (const file of files) {
-      const savedName = await copyImage(monthAssetsDir, file);
-      images.push({ file: savedName, alt: `${date} 摄影记录` });
-    }
-
-    const current = await getFileJson(jsonHandle);
-    current.push({ date, title, text, images });
-    await writeJson(jsonHandle, current);
+  if (action === "delete-photo") {
+    records.splice(index, 1);
+    await writeJson(jsonHandle, records);
     await rebuildPhotographyIndex(photographyDir);
-
-    photoForm.reset();
-    document.getElementById("year").value = year;
-    document.getElementById("month").value = String(Number(month));
-    setStatus(photoStatus, `已保存到 ${year}/${month}。`);
-  } catch (error) {
-    setStatus(photoStatus, `保存失败：${error.message}`);
+    if (editingPhotoIndex === index) {
+      editingPhotoIndex = null;
+      photoForm.reset();
+    }
+    await renderPhotoRecords();
+    setStatus(photoStatus, `已删除 ${year}/${month} 的第 ${index + 1} 条记录。`);
   }
 });
 
-algorithmForm.addEventListener("submit", async (event) => {
-  event.preventDefault();
-  if (!rootHandle) {
-    setStatus(algoStatus, "请先选择博客根目录。");
+algoRecords.addEventListener("click", async (event) => {
+  const target = event.target;
+  if (!(target instanceof HTMLButtonElement)) {
     return;
   }
 
-  try {
-    const type = document.getElementById("algo-type").value.trim();
-    const url = document.getElementById("algo-url").value.trim();
-    const solution = document.getElementById("algo-solution").value.trim();
-    const reflection = document.getElementById("algo-reflection").value.trim();
+  const index = Number(target.dataset.index);
+  const action = target.dataset.action;
+  const { type, fileName, algorithmsDir, jsonHandle } = await getAlgorithmJsonHandle();
+  const records = await getFileJson(jsonHandle);
 
-    const algorithmsDir = await getDirectory(rootHandle, "algorithms");
-    await ensureAlgorithmTemplate(algorithmsDir);
+  if (action === "edit-algo") {
+    const entry = records[index];
+    editingAlgoIndex = index;
+    document.getElementById("algo-url").value = entry.url || "";
+    document.getElementById("algo-solution").value = entry.solution || "";
+    document.getElementById("algo-reflection").value = entry.reflection || "";
+    setStatus(algoStatus, `正在编辑题型 ${type} 的第 ${index + 1} 条记录。重新保存即可覆盖。`);
+    return;
+  }
 
-    const fileBase = slugify(type);
-    const fileName = `${fileBase}.json`;
-    const jsonHandle = await algorithmsDir.getFileHandle(fileName, { create: true });
-    const current = await getFileJson(jsonHandle);
-
-    current.push({ type, url, solution, reflection });
-    await writeJson(jsonHandle, current);
+  if (action === "delete-algo") {
+    records.splice(index, 1);
+    await writeJson(jsonHandle, records);
     await rebuildAlgorithmTypePage(algorithmsDir, type, fileName);
 
     const typeEntries = [];
@@ -406,25 +501,117 @@ algorithmForm.addEventListener("submit", async (event) => {
       }
       const json = await getFileJson(handle);
       const title = json[0]?.type || name.replace(".json", "");
-      typeEntries.push({
-        type: name === fileName ? type : title,
-        fileName: name
-      });
+      typeEntries.push({ type: title, fileName: name });
     }
 
-    const deduped = [];
-    const seen = new Set();
-    for (const entry of typeEntries) {
-      if (seen.has(entry.fileName)) {
+    await rebuildAlgorithmsIndex(algorithmsDir, typeEntries);
+    if (editingAlgoIndex === index) {
+      editingAlgoIndex = null;
+      algorithmForm.reset();
+    }
+    await renderAlgorithmRecords();
+    setStatus(algoStatus, `已删除题型 ${type} 的第 ${index + 1} 条记录。`);
+  }
+});
+
+photoForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  if (!rootHandle) {
+    setStatus(photoStatus, `请先授权默认目录：${DEFAULT_ROOT_PATH}`);
+    return;
+  }
+
+  try {
+    const { year, month, photographyDir, jsonHandle } = await getPhotoJsonHandle();
+    const date = document.getElementById("date").value.trim();
+    const title = document.getElementById("title").value.trim();
+    const text = document.getElementById("text").value.trim();
+    const files = Array.from(document.getElementById("images").files || []);
+    const records = await getFileJson(jsonHandle);
+
+    let images = records[editingPhotoIndex]?.images || [];
+    if (files.length) {
+      const assetsDir = await getDirectory(rootHandle, "assets");
+      const photographyAssetsDir = await getDirectory(assetsDir, "photography");
+      const yearAssetsDir = await getDirectory(photographyAssetsDir, year);
+      const monthAssetsDir = await getDirectory(yearAssetsDir, month);
+
+      images = [];
+      for (const file of files) {
+        const savedName = await copyImage(monthAssetsDir, file);
+        images.push({ file: savedName, alt: `${date} 摄影记录` });
+      }
+    }
+
+    if (!images.length) {
+      setStatus(photoStatus, "请至少保留一张照片。");
+      return;
+    }
+
+    const entry = { date, title, text, images };
+    if (editingPhotoIndex !== null) {
+      records[editingPhotoIndex] = entry;
+    } else {
+      records.push(entry);
+    }
+
+    await writeJson(jsonHandle, records);
+    await rebuildPhotographyIndex(photographyDir);
+    photoForm.reset();
+    document.getElementById("year").value = year;
+    document.getElementById("month").value = String(Number(month));
+    const wasEditing = editingPhotoIndex !== null;
+    editingPhotoIndex = null;
+    await renderPhotoRecords();
+    setStatus(photoStatus, wasEditing ? `已更新 ${year}/${month} 的记录。` : `已保存到 ${year}/${month}。`);
+  } catch (error) {
+    setStatus(photoStatus, `保存失败：${error.message}`);
+  }
+});
+
+algorithmForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  if (!rootHandle) {
+    setStatus(algoStatus, `请先授权默认目录：${DEFAULT_ROOT_PATH}`);
+    return;
+  }
+
+  try {
+    const { type, fileName, algorithmsDir, jsonHandle } = await getAlgorithmJsonHandle();
+    const url = document.getElementById("algo-url").value.trim();
+    const solution = document.getElementById("algo-solution").value.trim();
+    const reflection = document.getElementById("algo-reflection").value.trim();
+    const records = await getFileJson(jsonHandle);
+
+    const entry = { type, url, solution, reflection };
+    if (editingAlgoIndex !== null) {
+      records[editingAlgoIndex] = entry;
+    } else {
+      records.push(entry);
+    }
+
+    await writeJson(jsonHandle, records);
+    await ensureAlgorithmTemplate(algorithmsDir);
+    await rebuildAlgorithmTypePage(algorithmsDir, type, fileName);
+
+    const typeEntries = [];
+    for await (const [name, handle] of algorithmsDir.entries()) {
+      if (handle.kind !== "file" || !name.endsWith(".json")) {
         continue;
       }
-      seen.add(entry.fileName);
-      deduped.push(entry);
+      const json = await getFileJson(handle);
+      const title = json[0]?.type || name.replace(".json", "");
+      typeEntries.push({ type: title, fileName: name });
     }
 
-    await rebuildAlgorithmsIndex(algorithmsDir, deduped);
+    await rebuildAlgorithmsIndex(algorithmsDir, typeEntries);
     algorithmForm.reset();
-    setStatus(algoStatus, `已保存到题型：${type}`);
+    const currentType = type;
+    document.getElementById("algo-type").value = currentType;
+    const wasEditing = editingAlgoIndex !== null;
+    editingAlgoIndex = null;
+    await renderAlgorithmRecords();
+    setStatus(algoStatus, wasEditing ? `已更新题型 ${type} 的记录。` : `已保存到题型：${type}`);
   } catch (error) {
     setStatus(algoStatus, `保存失败：${error.message}`);
   }

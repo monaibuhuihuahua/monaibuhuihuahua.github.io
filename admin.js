@@ -13,14 +13,15 @@ const photoStatus = document.getElementById("photo-status");
 const thoughtStatus = document.getElementById("thought-status");
 const algoStatus = document.getElementById("algo-status");
 const tabButtons = document.querySelectorAll(".admin-tab");
+const photographyPanel = document.getElementById("photography-panel");
+const thoughtsPanel = document.getElementById("thoughts-panel");
+const algorithmsPanel = document.getElementById("algorithms-panel");
 const photoRecords = document.getElementById("photo-records");
 const thoughtRecords = document.getElementById("thought-records");
 const algoRecords = document.getElementById("algo-records");
 const loadPhotoRecordsButton = document.getElementById("load-photo-records");
 const loadThoughtRecordsButton = document.getElementById("load-thought-records");
 const loadAlgoRecordsButton = document.getElementById("load-algo-records");
-const thoughtRecordsSection = document.getElementById("thought-records-section");
-const algorithmRecordsSection = document.getElementById("algorithm-records-section");
 
 function setStatus(element, text) {
   element.textContent = text;
@@ -500,11 +501,9 @@ tabButtons.forEach((button) => {
     tabButtons.forEach((tab) => tab.classList.remove("is-active"));
     button.classList.add("is-active");
     const tab = button.dataset.tab;
-    photoForm.classList.toggle("is-hidden", tab !== "photography");
-    thoughtForm.classList.toggle("is-hidden", tab !== "thoughts");
-    algorithmForm.classList.toggle("is-hidden", tab !== "algorithms");
-    thoughtRecordsSection.classList.toggle("is-hidden", tab !== "thoughts");
-    algorithmRecordsSection.classList.toggle("is-hidden", tab !== "algorithms");
+    photographyPanel.classList.toggle("is-hidden", tab !== "photography");
+    thoughtsPanel.classList.toggle("is-hidden", tab !== "thoughts");
+    algorithmsPanel.classList.toggle("is-hidden", tab !== "algorithms");
   });
 });
 

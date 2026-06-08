@@ -31,114 +31,120 @@
         <button class="admin-tab" type="button" data-tab="algorithms">算法题</button>
       </div>
 
-      <form id="photo-form" class="admin-form">
-        <label>
-          <span>年份</span>
-          <input id="year" type="number" min="2020" max="2100" value="2026" required>
-        </label>
+      <section id="photography-panel" class="admin-pane">
+        <form id="photo-form" class="admin-form">
+          <label>
+            <span>年份</span>
+            <input id="year" type="number" min="2020" max="2100" value="2026" required>
+          </label>
 
-        <label>
-          <span>月份</span>
-          <input id="month" type="number" min="1" max="12" value="6" required>
-        </label>
+          <label>
+            <span>月份</span>
+            <input id="month" type="number" min="1" max="12" value="6" required>
+          </label>
 
-        <label>
-          <span>日期</span>
-          <input id="date" type="text" placeholder="例如 2026.06.08" required>
-        </label>
+          <label>
+            <span>日期</span>
+            <input id="date" type="text" placeholder="例如 2026.06.08" required>
+          </label>
 
-        <label>
-          <span>标题</span>
-          <input id="title" type="text" placeholder="这一组照片想起个什么标题" required>
-        </label>
+          <label>
+            <span>标题</span>
+            <input id="title" type="text" placeholder="这一组照片想起个什么标题" required>
+          </label>
 
-        <label>
-          <span>正文</span>
-          <textarea id="text" rows="5" placeholder="写下当时的心情、看到的场景，或者那天发生的小事" required></textarea>
-        </label>
+          <label>
+            <span>正文</span>
+            <textarea id="text" rows="5" placeholder="写下当时的心情、看到的场景，或者那天发生的小事" required></textarea>
+          </label>
 
-        <label>
-          <span>选择照片</span>
-          <input id="images" type="file" accept="image/*" multiple required>
-        </label>
+          <label>
+            <span>选择照片</span>
+            <input id="images" type="file" accept="image/*" multiple required>
+          </label>
 
-        <div class="admin-actions">
-          <button class="button primary" type="submit">保存摄影记录</button>
-          <p id="photo-status" class="photo-tip"></p>
-        </div>
-      </form>
+          <div class="admin-actions">
+            <button class="button primary" type="submit">保存摄影记录</button>
+            <p id="photo-status" class="photo-tip"></p>
+          </div>
+        </form>
 
-      <section class="admin-records">
-        <div class="admin-actions">
-          <h2>摄影记录</h2>
-          <button id="load-photo-records" class="button secondary" type="button">读取当前月份</button>
-        </div>
-        <div id="photo-records" class="admin-record-list"></div>
+        <section class="admin-records">
+          <div class="admin-actions">
+            <h2>摄影记录</h2>
+            <button id="load-photo-records" class="button secondary" type="button">读取当前月份</button>
+          </div>
+          <div id="photo-records" class="admin-record-list"></div>
+        </section>
       </section>
 
-      <form id="thought-form" class="admin-form is-hidden">
-        <label>
-          <span>标题</span>
-          <input id="thought-title" type="text" placeholder="这一篇想写什么" required>
-        </label>
+      <section id="thoughts-panel" class="admin-pane is-hidden">
+        <form id="thought-form" class="admin-form">
+          <label>
+            <span>标题</span>
+            <input id="thought-title" type="text" placeholder="这一篇想写什么" required>
+          </label>
 
-        <label>
-          <span>时间</span>
-          <input id="thought-date" type="text" placeholder="例如 2026.06.08" required>
-        </label>
+          <label>
+            <span>时间</span>
+            <input id="thought-date" type="text" placeholder="例如 2026.06.08" required>
+          </label>
 
-        <label>
-          <span>内容</span>
-          <textarea id="thought-content" rows="7" placeholder="写下你的生活感悟。" required></textarea>
-        </label>
+          <label>
+            <span>内容</span>
+            <textarea id="thought-content" rows="7" placeholder="写下你的生活感悟。" required></textarea>
+          </label>
 
-        <div class="admin-actions">
-          <button class="button primary" type="submit">保存生活感悟</button>
-          <p id="thought-status" class="photo-tip"></p>
-        </div>
-      </form>
+          <div class="admin-actions">
+            <button class="button primary" type="submit">保存生活感悟</button>
+            <p id="thought-status" class="photo-tip"></p>
+          </div>
+        </form>
 
-      <section id="thought-records-section" class="admin-records is-hidden">
-        <div class="admin-actions">
-          <h2>生活感悟</h2>
-          <button id="load-thought-records" class="button secondary" type="button">读取全部记录</button>
-        </div>
-        <div id="thought-records" class="admin-record-list"></div>
+        <section id="thought-records-section" class="admin-records">
+          <div class="admin-actions">
+            <h2>生活感悟</h2>
+            <button id="load-thought-records" class="button secondary" type="button">读取全部记录</button>
+          </div>
+          <div id="thought-records" class="admin-record-list"></div>
+        </section>
       </section>
 
-      <form id="algorithm-form" class="admin-form is-hidden">
-        <label>
-          <span>题型</span>
-          <input id="algo-type" type="text" placeholder="例如 数组、链表、二叉树、动态规划" required>
-        </label>
+      <section id="algorithms-panel" class="admin-pane is-hidden">
+        <form id="algorithm-form" class="admin-form">
+          <label>
+            <span>题型</span>
+            <input id="algo-type" type="text" placeholder="例如 数组、链表、二叉树、动态规划" required>
+          </label>
 
-        <label>
-          <span>题目网址</span>
-          <input id="algo-url" type="url" placeholder="https://..." required>
-        </label>
+          <label>
+            <span>题目网址</span>
+            <input id="algo-url" type="url" placeholder="https://..." required>
+          </label>
 
-        <label>
-          <span>题解</span>
-          <textarea id="algo-solution" rows="6" placeholder="记录这道题的思路、关键点、做法。" required></textarea>
-        </label>
+          <label>
+            <span>题解</span>
+            <textarea id="algo-solution" rows="6" placeholder="记录这道题的思路、关键点、做法。" required></textarea>
+          </label>
 
-        <label>
-          <span>感悟</span>
-          <textarea id="algo-reflection" rows="4" placeholder="写这道题带给你的卡点、反思或收获。" required></textarea>
-        </label>
+          <label>
+            <span>感悟</span>
+            <textarea id="algo-reflection" rows="4" placeholder="写这道题带给你的卡点、反思或收获。" required></textarea>
+          </label>
 
-        <div class="admin-actions">
-          <button class="button primary" type="submit">保存算法记录</button>
-          <p id="algo-status" class="photo-tip"></p>
-        </div>
-      </form>
+          <div class="admin-actions">
+            <button class="button primary" type="submit">保存算法记录</button>
+            <p id="algo-status" class="photo-tip"></p>
+          </div>
+        </form>
 
-      <section id="algorithm-records-section" class="admin-records is-hidden">
-        <div class="admin-actions">
-          <h2>算法记录</h2>
-          <button id="load-algo-records" class="button secondary" type="button">读取当前题型</button>
-        </div>
-        <div id="algo-records" class="admin-record-list"></div>
+        <section id="algorithm-records-section" class="admin-records">
+          <div class="admin-actions">
+            <h2>算法记录</h2>
+            <button id="load-algo-records" class="button secondary" type="button">读取当前题型</button>
+          </div>
+          <div id="algo-records" class="admin-record-list"></div>
+        </section>
       </section>
     </section>
   </div>
